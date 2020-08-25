@@ -1,0 +1,23 @@
+The function 'skimage.measure.shannon_entropy()' in different versions of skimage are different,unfortunately I have met the wrong one. In 0.13.1, it is defined as :
+
+def shannon_entropy(image, base=2):
+#    ***
+#    >>> from skimage import data
+#    >>> shannon_entropy(data.camera())
+#    17.732031303342747
+  return scipy_entropy(image, base=base)
+  which is not correct.
+  In version 0.14.1:
+  def shannon_entropy(image, base=2):
+    _, counts = unique(image, return_counts=True)
+      return scipy_entropy(counts, base=base)
+  
+  And I have made another version:
+  def shannon_entropy(image, base=2):
+    imagea = np.histogram(image.ravel(), bins=256)[0]
+    return scipy_entropy(imagea, base=base)
+    
+ The results of a same image are:
+ 16.296038757567434 (0.13.1)
+ 6.672132219241444  (0.14.1)
+ 6.672132219241444  (my version)
